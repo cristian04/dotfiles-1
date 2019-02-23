@@ -1,0 +1,183 @@
+export DOCKER_REPO_PREFIX=jess
+
+del_stopped(){
+	local name=$1
+	local state
+	state=$(docker inspect --format "{{.State.Running}}" "$name" 2>/dev/null)
+
+	if [[ "$state" == "false" ]]; then
+		docker rm "$name"
+	fi
+}
+
+dcleanup(){
+	local containers
+	mapfile -t containers < <(docker ps -aq 2>/dev/null)
+	docker rm "${containers[@]}" 2>/dev/null
+	local volumes
+	mapfile -t volumes < <(docker ps --filter status=exited -q 2>/dev/null)
+	docker rm -v "${volumes[@]}" 2>/dev/null
+	local images
+	mapfile -t images < <(docker images --filter dangling=true -q 2>/dev/null)
+	docker rmi "${images[@]}" 2>/dev/null
+}
+
+transmission(){
+	del_stopped transmission
+
+	docker run -d \
+		-v "${HOME}/Torrents:/transmission/download" \
+		-v "${HOME}/.transmission:/transmission/config" \
+		-p 9091:9091 \
+		-p 51413:51413 \
+		-p 51413:51413/udp \
+		--name transmission \
+		${DOCKER_REPO_PREFIX}/transmission
+
+	sudo hostess add transmission "127.0.0.1"
+	open "http://transmission:9091"
+}
+
+aws(){
+	docker run -it --rm \
+		-v "${HOME}/.aws:/root/.aws" \
+		--log-driver none \
+		--name aws \
+		${DOCKER_REPO_PREFIX}/awscli "$@"
+}
+
+az(){
+	docker run -it --rm \
+		-v "${HOME}/.azure:/root/.azure" \
+		--log-driver none \
+		${DOCKER_REPO_PREFIX}/azure-cli "$@"
+}
+
+firefox(){
+	del_stopped firefox
+
+	docker run -d \
+		--memory 2gb \
+		--net host \
+		--cpuset-cpus 0 \
+		-v /etc/localtime:/etc/localtime:ro \
+		-v /tmp/.X11-unix:/tmp/.X11-unix \
+		-v "${HOME}/.firefox/cache:/root/.cache/mozilla" \
+		-v "${HOME}/.firefox/mozilla:/root/.mozilla" \
+		-v "${HOME}/Downloads:/root/Downloads" \
+		-v "${HOME}/Pictures:/root/Pictures" \
+		-v "${HOME}/Torrents:/root/Torrents" \
+		-e "DISPLAY=unix${DISPLAY}" \
+		-e GDK_SCALE \
+		-e GDK_DPI_SCALE \
+		--device /dev/snd \
+		--device /dev/dri \
+		--name firefox \
+		${DOCKER_REPO_PREFIX}/firefox "$@"
+
+	# exit current shell
+	exit 0
+}
+
+hollywood(){
+	docker run --rm -it \
+		--name hollywood \
+		${DOCKER_REPO_PREFIX}/hollywood
+}
+
+htop(){
+	docker run --rm -it \
+		--pid host \
+		--net none \
+		--name htop \
+		${DOCKER_REPO_PREFIX}/htop
+}
+
+masscan(){
+	docker run -it --rm \
+		--log-driver none \
+		--net host \
+		--cap-add NET_ADMIN \
+		--name masscan \
+		${DOCKER_REPO_PREFIX}/masscan "$@"
+}
+
+nes()
+{
+	del_stopped nes
+	local game=$1
+
+	docker run -d \
+		-v /tmp/.X11-unix:/tmp/.X11-unix \
+		-e "DISPLAY=unix${DISPLAY}" \
+		--device /dev/dri \
+		--device /dev/snd \
+		--name nes \
+		${DOCKER_REPO_PREFIX}/nes "/games/${game}.rom"
+}
+
+rainbowstream(){
+	docker run -it --rm \
+		-v /etc/localtime:/etc/localtime:ro \
+		-v "${HOME}/.rainbow_oauth:/root/.rainbow_oauth" \
+		-v "${HOME}/.rainbow_config.json:/root/.rainbow_config.json" \
+		--name rainbowstream \
+		${DOCKER_REPO_PREFIX}/rainbowstream
+}
+
+terraform(){
+	docker run -it --rm \
+		-v "${HOME}:${HOME}:ro" \
+		-v "$(pwd):/usr/src/repo" \
+		-v /tmp:/tmp \
+		--workdir /usr/src/repo \
+		--log-driver none \
+		-e GOOGLE_APPLICATION_CREDENTIALS \
+		-e SSH_AUTH_SOCK \
+		${DOCKER_REPO_PREFIX}/terraform "$@"
+}
+
+virt_viewer(){
+	relies_on kvm
+
+	docker run -it --rm \
+		-v /etc/localtime:/etc/localtime:ro \
+		-v /tmp/.X11-unix:/tmp/.X11-unix  \
+		-e "DISPLAY=unix${DISPLAY}" \
+		-v /run/libvirt:/var/run/libvirt \
+		-e PULSE_SERVER=pulseaudio \
+		--group-add audio \
+		--log-driver none \
+		--net container:kvm \
+		${DOCKER_REPO_PREFIX}/virt-viewer "$@"
+}
+
+alias virt-viewer="virt_viewer"
+
+visualstudio(){
+	del_stopped visualstudio
+
+	docker run -d \
+		-v /etc/localtime:/etc/localtime:ro \
+		-v /tmp/.X11-unix:/tmp/.X11-unix  \
+		-e "DISPLAY=unix${DISPLAY}" \
+		--device /dev/dri \
+		--name visualstudio \
+		${DOCKER_REPO_PREFIX}/vscode
+}
+
+alias vscode="visualstudio"
+
+wireshark(){
+	del_stopped wireshark
+
+	docker run -d \
+		-v /etc/localtime:/etc/localtime:ro \
+		-v /tmp/.X11-unix:/tmp/.X11-unix \
+		-e "DISPLAY=unix${DISPLAY}" \
+		--cap-add NET_RAW \
+		--cap-add NET_ADMIN \
+		--net host \
+		--name wireshark \
+		${DOCKER_REPO_PREFIX}/wireshark
+}
