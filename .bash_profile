@@ -4,9 +4,16 @@ export PATH="$HOME/bin:$PATH";
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
-for file in ~/.{path,bash_prompt,exports,aliases,functions,extra,dockerapps}; do
+for file in ~/.{path,bash_prompt,exports,aliases,functions,extra,dockerapps,gitcompletion}; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file";
 done;
+
+# Kubernetes!!!!
+source <(minikube completion bash)
+source <(kubectl completion bash)
+source "/usr/local/opt/kube-ps1/share/kube-ps1.sh"
+PS1='$(kube_ps1)'$PS1
+
 unset file;
 
 # Case-insensitive globbing (used in pathname expansion)

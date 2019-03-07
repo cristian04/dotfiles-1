@@ -41,6 +41,7 @@ transmission(){
 aws(){
 	docker run -it --rm \
 		-v "${HOME}/.aws:/root/.aws" \
+		-v "${HOME}/aws:/root/aws" \
 		--log-driver none \
 		--name aws \
 		${DOCKER_REPO_PREFIX}/awscli "$@"

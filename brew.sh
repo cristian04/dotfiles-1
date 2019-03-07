@@ -32,71 +32,81 @@ if ! fgrep -q "${BREW_PREFIX}/bin/bash" /etc/shells; then
   chsh -s "${BREW_PREFIX}/bin/bash";
 fi;
 
-# Install `wget` with IRI support.
-brew install wget --with-iri
-
-# Install GnuPG to enable PGP-signing commits.
-brew install gnupg
-
-# Install more recent versions of some macOS tools.
-brew install vim --with-override-system-vi
-brew install grep
-brew install openssh
-brew install screen
-#brew install php
-#brew install gmp
-
-# Install font tools.
-brew tap bramstein/webfonttools
-brew install sfnt2woff
-brew install sfnt2woff-zopfli
-brew install woff2
-
-# Install some CTF tools; see https://github.com/ctfs/write-ups.
-# brew install aircrack-ng
-# brew install bfg
-# brew install binutils
-brew install binwalk
-# brew install cifer
-# brew install dex2jar
-# brew install dns2tcp
-# brew install fcrackzip
-# brew install foremost
-# brew install hashpump
-# brew install hydra
-# brew install john
-# brew install knock
-# brew install netpbm
-brew install nmap
-# brew install pngcheck
-brew install socat
-# brew install sqlmap
-brew install tcpflow
-# brew install tcpreplay
-# brew install tcptrace
-# brew install ucspi-tcp # `tcpserver` etc.
-# brew install xpdf
-# brew install xz
-
-# Install other useful binaries.
 brew install ack
-#brew install exiv2
+brew install arp-scan
+brew install asciinema
+brew install asdf
+brew install awscli
+brew install axel
+brew install bash
+brew install bash-completion2
+brew install binwalk
+brew install cmatrix
+brew install coreutils
+brew install cowsay
+brew install docker-machine
+brew install docker-machine-driver-xhyve
+brew install ext4fuse
+brew install ffmpeg
+brew install figlet
+brew install findutils
+brew install flow
+brew install fontconfig
+brew install fortune
+brew install gettext
 brew install git
 brew install git-lfs
-# brew install imagemagick --with-webp
-# brew install lua
-brew install lynx
+brew install gnupg
+brew install gnuplot
+brew install go
+brew install gource
+brew install grep
+brew install hostess
+brew install htop
+brew install htop-osx
+brew install iftop
+brew install jq
+brew install kompose
+brew install kubernetes-cli
+brew install kubernetes-helm
+brew install kube-ps1
+brew install logstalgia
+brew install lolcat
+brew install mas
+brew install midnight-commander
+brew install moreutils
+brew install mplayer
+brew install nmap
+brew install node
+brew install openssh
 brew install p7zip
-# brew install pigz
+brew install pandoc
 brew install pv
 brew install rename
-# brew install rlwrap
-brew install pandoc
-
+brew install screen
+brew install socat
 brew install ssh-copy-id
+brew install sshfs
+brew install sshuttle
+brew install tcpflow
 brew install tree
-# brew install vbindiff
-# brew install zopfli
+brew install unrar
+brew install watch
+brew install wget
+brew install youtube-dl
+
+# Install casks
+brew cask install docker
+brew cask install google-chrome
+brew cask install macvim
+brew cask install slack
+brew cask install sublime-text
+brew cask install vagrant
+brew cask install visual-studio-code
+brew cask install virtualbox
+brew cask install ubersicht
+brew cask install minikube
+brew cask install intel-power-gadget
 
 # Remove outdated versions from the cellar.
 brew cleanup
