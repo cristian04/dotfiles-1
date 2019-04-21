@@ -38,22 +38,6 @@ transmission(){
 	open "http://transmission:9091"
 }
 
-aws(){
-	docker run -it --rm \
-		-v "${HOME}/.aws:/root/.aws" \
-		-v "${HOME}/aws:/root/aws" \
-		--log-driver none \
-		--name aws \
-		${DOCKER_REPO_PREFIX}/awscli "$@"
-}
-
-az(){
-	docker run -it --rm \
-		-v "${HOME}/.azure:/root/.azure" \
-		--log-driver none \
-		${DOCKER_REPO_PREFIX}/azure-cli "$@"
-}
-
 firefox(){
 	del_stopped firefox
 
@@ -126,17 +110,6 @@ rainbowstream(){
 		${DOCKER_REPO_PREFIX}/rainbowstream
 }
 
-terraform(){
-	docker run -it --rm \
-		-v "${HOME}:${HOME}:ro" \
-		-v "$(pwd):/usr/src/repo" \
-		-v /tmp:/tmp \
-		--workdir /usr/src/repo \
-		--log-driver none \
-		-e GOOGLE_APPLICATION_CREDENTIALS \
-		-e SSH_AUTH_SOCK \
-		${DOCKER_REPO_PREFIX}/terraform "$@"
-}
 
 virt_viewer(){
 	relies_on kvm
