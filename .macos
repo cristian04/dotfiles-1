@@ -102,8 +102,7 @@ sudo defaults write /Library/Preferences/com.apple.loginwindow AdminHostInfo Hos
 # Restart automatically if the computer freezes
 sudo systemsetup -setrestartfreeze on
 
-# Never go into computer sleep mode
-sudo systemsetup -setcomputersleep Off > /dev/null
+sudo systemsetup -setcomputersleep On > /dev/null
 
 # Disable Notification Center and remove the menu bar icon
 launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null
@@ -134,7 +133,7 @@ sudo ln -s /Users/cristian04/dotfiles/wallpaper.jpg /System/Library/CoreServices
 ###############################################################################
 
 # Disable hibernation (speeds up entering sleep mode)
-sudo pmset -a hibernatemode 0
+sudo pmset -a hibernatemode 1
 
 # Remove the sleep image file to save disk space
 sudo rm /private/var/vm/sleepimage
