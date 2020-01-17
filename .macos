@@ -133,7 +133,7 @@ sudo ln -s /Users/cristian04/dotfiles/wallpaper.jpg /System/Library/CoreServices
 ###############################################################################
 
 # Disable hibernation (speeds up entering sleep mode)
-sudo pmset -a hibernatemode 1
+sudo pmset -a hibernatemode 25
 
 # Remove the sleep image file to save disk space
 sudo rm /private/var/vm/sleepimage
